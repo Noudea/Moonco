@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ServerController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello create {{ controller_name }}! ✅</h1>
+
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/moonco/src/Controller/ServerController.php'|file_link(0) }}">src/Controller/ServerController.php</a></code></li>
+        <li>Your template at <code><a href="{{ 'C:/wamp64/www/moonco/templates/server/index.html.twig'|file_link(0) }}">templates/server/index.html.twig</a></code></li>
+    </ul>
+</div>
+<div>
+    {{ form_start(serverForm) }}
+        {{ form_label(serverForm.name) }}
+        {{ form_widget(serverForm.name) }}
+        {{ form_errors(serverForm.name) }}
+        {# {{ form_label(serverForm.description) }}
+        {{ form_widget(serverForm.description) }}
+        {{ form_errors(serverForm.description) }} #}
+        {{ form_label(serverForm.slugInput) }}
+        {{ form_widget(serverForm.slugInput) }}
+        {{ form_errors(serverForm.slugInput) }}
+        <button type="submit">Envoyer</button>
+    {{ form_end(serverForm) }}
+</div>
+
+{% endblock %}
