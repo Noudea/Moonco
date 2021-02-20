@@ -1,0 +1,23 @@
+img {
+    max-width: 100%;
+}
+
+body {
+    background-color: #36393f;
+    display:flex;
+    margin:0px;
+}
+
+header {
+    background-color: #23272a;
+    height : 100vh;
+    width:350px;
+    /* position : fixed;
+    left:0px;
+    top:0px;
+    width:250px; */
+}
+
+p,h1 {
+    color: white;
+}

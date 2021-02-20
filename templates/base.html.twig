@@ -3,11 +3,30 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link href="{{ asset('Assets/css/base.css') }}" rel="stylesheet"/>
+        {% endblock %}
         {% block javascripts %}{% endblock %}
 
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% if app.user %}
+            <header> 
+                <div class"navBar">
+                    <p>{{ app.user.email }}</p>
+                    <div>
+                        {% if userServers %}
+                            {% for server in userServers %}
+                                <a href="/server/{{ server.id }}" class="serverName"> {{ server.name }} </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+        {% endif %}
+        <div>
+            {% block body %}
+            {% endblock %}
+        </div>
     </body>
 </html>

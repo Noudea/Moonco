@@ -16,6 +16,9 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/server", name="server")
@@ -34,23 +37,28 @@ class ServerController extends AbstractController
         if($server && $server->getUsers()->contains($user))
         {
 
-            $serverMovies = $server->getMovies();
+            $serverMovies = $server->getMovies()->toArray();
             dump($serverMovies);
+            dump($user->getServers()->toArray());
+            dump($server);
 
+            $userServers = $user->getServers()->toArray();
             return $this->render('server/index.html.twig', [
                 'controller_name' => 'ServerController',
+                'movies' => $serverMovies,
+                'userServers' => $userServers,
+                'server' => $server,
             ]);
 
         } else {
             //je gere ici si le serv n'existe pas ou que l'utilisateur n'a pas l'accès
         }
-        dump($server);
     }
 
     /**
      * @Route("/create", name="create")
      */
-    public function create(Request $request,EntityManagerInterface $entityManager)
+    public function create(Request $request,EntityManagerInterface $entityManager, UserInterface $user)
     {
         //creation de l'instance server
         $server = new Server();
@@ -83,20 +91,21 @@ class ServerController extends AbstractController
                 var_dump('not valid');
             }
         }
-
+        $userServers = $user->getServers()->toArray();
         return $this->render(
             "server/create.html.twig",
             [
                 'controller_name' => 'ServerController Create Route',
-                "serverForm" => $serverForm->createView()
+                "serverForm" => $serverForm->createView(),
+                'userServers' => $userServers
             ]
         );
     }
 
     /**
-     * @Route("/addMovie/{id}", name="addMovie")
+     * @Route("/{id}/addMovie", name="addMovie")
      */
-    public function addMovie(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, Server $server) {
+    public function addMovie(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, Server $server, UserInterface $user) {
 
         $movie = new Movie();
         $movieForm = $this->createForm(MovieType::class, $movie);
@@ -127,17 +136,42 @@ class ServerController extends AbstractController
 
             $movie->setLink("../files/" . $server->getId() . "/movies"."/". $newFilename);
             $movie->setRelation($server);
+            $server->addMovie($movie);
             $entityManager->persist($movie);
             $entityManager->flush(); // ajoute en BDD
             dump($movie);
         }
+
+        $userServers = $user->getServers()->toArray();
         return $this->render(
             "server/addMovie.html.twig",
             [
                 'controller_name' => 'ServerController Create Route',
-                "movieForm" => $movieForm->createView()
+                "movieForm" => $movieForm->createView(),
+                'userServers' => $userServers
             ]
         );
+    }
+
+    /**
+     * @Route("/{id}/movie/{movieId}", name="movie")
+     * @ParamConverter("movie", options={"id" = "movieId"})
+     */
+    public function video(Request $request,Server $server,Movie $movie) {
+        
+        $file = $movie->getLink();
+        $response = new BinaryFileResponse($file);
+        $response->headers->set('Content-Type', 'video/mp4');
+        BinaryFileResponse::trustXSendfileTypeHeader();
+
+
+        // $response->setContentDisposition(
+        //     ResponseHeaderBag::DISPOSITION_INLINE,
+        //     $file
+        // );
+        $response->prepare($request);
+        $response->send();
+        return $movie;
     }
 
 }

@@ -1,20 +1,65 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello ServerController!{% endblock %}
-
+{% block stylesheets %}
+    <link href="{{ asset('Assets/css/base.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('Assets/css/server/server.css') }}" rel="stylesheet"/>
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+{% endblock %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/moonco/src/Controller/ServerController.php'|file_link(0) }}">src/Controller/ServerController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/moonco/templates/server/index.html.twig'|file_link(0) }}">templates/server/index.html.twig</a></code></li>
-    </ul>
+<div>
+    <div class="test">
+        <h1> Bienvenue sur {{ server.name }}</h1>
+    </div>
+    <div class="moviesContainer">
+        {% for movie in movies %}
+            <div class="movieWrapper">
+                <div class="moviePreview none">
+                    <video muted="muted" class='videoPreview'>
+                        <source src="{{ movie.relation.id }}/movie/{{ movie.id}}" type="video/mp4">
+                    </video>
+                    <div class="bottomMovieWrapper">
+                        <div class="topBottomMovieWrapper">
+                            <p class="movieName">{{ movie.name }}</p>
+                            <a class="play" href="{{ movie.relation.id }}/movie/{{ movie.id}}">Play</a>
+                        </div>
+                        <div class="bottomBottomMovieWrapper">
+                            <p>{{ movie.sypnosis }}</p>
+                        </div>
+                    </div>
+                </div>
+                    {# <p>{{ movie.sypnosis }}</p> #}
+                    <img class="imgWrapper" src={{movie.picture}}></img>
+            </div>
+        {% endfor %}
+    </div>
 </div>
+{# <video
+    id="my-video"
+    class="video-js"
+    controls
+    preload="auto"
+    width="640"
+    height="264"
+    poster="MY_VIDEO_POSTER.jpg"
+    data-setup="{}"
+  >
+    <source src="17/movie/5"  type="video/mp4" />
+    <source src="MY_VIDEO.webm" type="video/webm" />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank"
+        >supports HTML5 video</a
+      >
+    </p>
+  </video> #}
+  
+
+{% endblock %}
+
+{% block javascripts %}
+    {# <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script> #}
+    <script src="{{ asset('Assets/js/server.js') }}"></script>
 {% endblock %}
