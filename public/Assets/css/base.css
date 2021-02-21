@@ -21,3 +21,8 @@ header {
 p,h1 {
     color: white;
 }
+
+.blockBody {
+    padding:50px;
+    width:100%;
+}

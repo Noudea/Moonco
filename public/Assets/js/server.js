@@ -24,7 +24,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
             movie.style.zIndex = "1"
             moviePreview[index].classList.remove('none')
             // movie.style.transform = "translate(50px, 100px),scale3d(1.2, 1.2,1 )"
-            movie.style.transform = "scale3d(1.2, 1.2,1 )"
+            movie.style.transform = "scale3d(1.1, 1.1,1 )"
+            //get random int
+            // let rdNum = getRandomInt(0,videoPreview[index].duration)
+            // videoPreview[index].currentTime = rdNum
             videoPreview[index].play()
         })
         movie.addEventListener('mouseleave', () => {
@@ -39,3 +42,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
 })
+
+
+ function getRandomInt(min, max) {
+     min = Math.ceil(min);
+     max = Math.floor(max);
+     return Math.floor(Math.random() * (max - min + 1)) + min;
+ }

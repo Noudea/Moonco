@@ -37,6 +37,17 @@
     {{ form_end(movieForm) }}
         <div id="imgContainer"><img></img></div>
 </div>
+
+{# <form id="upload-form">
+    <label for="name">Name</label> <input id="name" type="text" name="name"><br>
+    <label for="file">File</label> <input id="file" type="file" name="file">
+    <input type="submit">
+</form> #}
+<p>Progress: <span id="progress-value"></span>%</p>
+<p id="upload-complete"></p>
+<p id="errors"></p>
+
+
 {% endblock %}
 
 {% block javascripts %}

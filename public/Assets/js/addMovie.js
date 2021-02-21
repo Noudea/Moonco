@@ -114,6 +114,79 @@ document.addEventListener('DOMContentLoaded', (event) => {
     //     }
     // };
 
+
+    /**
+     * AJOUTER form data
+     */
+    // const formData = new FormData()
+    // formData.append('blob', new Blob(['Hello World!\n']), 'test')
+
+    // fetch('http://localhost:8080/server/17/addMovie', {
+    // method: 'POST',
+    // body: formData
+    // })
+    // .then(r => r.json())
+    // .then(data => {
+    // console.log(data)
+    // })
+
+
+    document.getElementById('movie').addEventListener('submit', onSubmit);
+
+function onSubmit(event) {
+    event.preventDefault();
+
+    var formData = new FormData();
+    formData.append("movie[link]", document.getElementById("movie_link").files[0]);
+    console.log( document.getElementById("movie_link").files[0])
+    formData.append("movie[name]", document.getElementById("movie_name").value);
+    formData.append("movie[categoryInput]", document.getElementById("movie_categoryInput").value);
+    formData.append("movie[sypnosis]", document.getElementById("movie_sypnosis").value);
+    formData.append("movie[picture]", document.getElementById("movie_picture").value);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:8080/server/17/addMovie");
+    // xhr.addEventListener('load', onRequestComplete, false);
+    // xhr.upload.addEventListener("load", onUploadComplete, false);
+    xhr.upload.addEventListener("progress", onUploadProgress, false);
+    xhr.send(formData);
+}
+
+function onUploadProgress(event) {
+    if (event.lengthComputable) {
+        var percentComplete = event.loaded / event.total;
+        document.getElementById('progress-value').textContent = parseFloat(percentComplete*100).toFixed(2);
+    }
+}
+
+// // document.getElementById('upload-form').addEventListener('submit', onSubmit);
+// document.getElementById('movie').addEventListener('submit', onSubmit);
+
+// function onSubmit(event) {
+//     event.preventDefault();
+
+//     var formData = new FormData();
+//     formData.append("upload[file]", document.getElementById("file").files[0]);
+//     // formData.append("upload[name]", document.getElementById("name").value);
+
+//     var xhr = new XMLHttpRequest();
+//     xhr.open("POST", "http://localhost:8080/server/17/addMovie");
+//     // xhr.addEventListener('load', onRequestComplete, false);
+//     // xhr.upload.addEventListener("load", onUploadComplete, false);
+//     xhr.upload.addEventListener("progress", onUploadProgress, false);
+//     xhr.send(formData);
+// }
+
+// function onUploadProgress(event) {
+//     if (event.lengthComputable) {
+//         var percentComplete = event.loaded / event.total;
+//         document.getElementById('progress-value').textContent = parseFloat(percentComplete*100).toFixed(2);
+//     }
+// }
+
+
+
+
 })
 
 

@@ -106,14 +106,20 @@ class ServerController extends AbstractController
      * @Route("/{id}/addMovie", name="addMovie")
      */
     public function addMovie(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, Server $server, UserInterface $user) {
-
+        $maxUpload = (int)(ini_get('post_max_size'));
+        dump($maxUpload);
         $movie = new Movie();
-        $movieForm = $this->createForm(MovieType::class, $movie);
+        $movieForm = $this->createForm(MovieType::class, $movie, ['attr' => ['id' => 'movie']]);
         $movieForm->handleRequest($request);
 
         if ($movieForm->isSubmitted()) {
+            dump($movieForm);
             $movieFile = $movieForm->get('link')->getData();
+            // $test = $movieForm->get('upload')->getData();
 
+            // dump($test);
+            dump($movieFile);
+            
             if ($movieFile) {
                 $originalFilename = pathinfo($movieFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
@@ -162,6 +168,7 @@ class ServerController extends AbstractController
         $file = $movie->getLink();
         $response = new BinaryFileResponse($file);
         $response->headers->set('Content-Type', 'video/mp4');
+        // $response->headers->set('Content-Type', 'video/webm');
         BinaryFileResponse::trustXSendfileTypeHeader();
 
 
@@ -169,9 +176,11 @@ class ServerController extends AbstractController
         //     ResponseHeaderBag::DISPOSITION_INLINE,
         //     $file
         // );
+        dump($movie);
+        dump($response);
         $response->prepare($request);
         $response->send();
-        return $movie;
+        // return $movie;
     }
 
 }
